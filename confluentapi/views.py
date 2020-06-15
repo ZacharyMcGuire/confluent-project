@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from rest_framework import generics, permissions, renderers
-from rest_framework.decorators import api_view
+from rest_framework import generics, permissions, renderers, viewsets
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from confluentapi.models import Page
@@ -16,42 +16,29 @@ def api_root(request, format=None):
     })
 
 
-class UserList(generics.ListAPIView):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This viewset automatically provides `list` and `detail` actions.
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class PageList(generics.ListCreateAPIView):
+class PageViewSet(viewsets.ModelViewSet):
     """
-    List all pages, or create a new page.
-    """
-    queryset = Page.objects.all()
-    serializer_class = PageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    This viewset automatically provides `list`, `create`, `retrieve`, `update` and `destroy` actions
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-
-class PageDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete a page.
+    Additionally, we also provide an extra `html` action.
     """
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly]
 
-
-class PageHTML(generics.GenericAPIView):
-    queryset = Page.objects.all()
-    renderer_classes = [renderers.StaticHTMLRenderer]
-
-    def get(self, request, *args, **kwargs):
+    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
+    def html(self, request, *args, **kwargs):
         page = self.get_object()
         return Response(page.html)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
