@@ -16,5 +16,6 @@ Including another URLconf
 from django.urls import path, include
 
 urlpatterns = [
+    path('', include('confluentweb.urls')),
     path('api/', include('confluentapi.urls')),
 ]
