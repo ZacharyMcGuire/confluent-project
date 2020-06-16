@@ -39,16 +39,6 @@ class Logout(APIView):
         return redirect('web-login')
 
 
-class PageList(APIView):
-    # permission_classes = (IsAuthenticated,)
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'page_list.html'
-
-    def get(self, request):
-        queryset = Page.objects.all()
-        return Response({'pages': queryset})
-
-
 class PageDetail(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'page_detail.html'

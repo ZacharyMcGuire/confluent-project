@@ -14,7 +14,9 @@
   <body>
     <div id="sidebar">
         <ul>
-            {% block sidebar %}{% include 'page_list.html' %}{% endblock %}
+            {% for page in pages %}
+            <li><a href="{% url 'web-page-detail' page.id %}">{{ page.title }}</a></li>
+            {% endfor %}
             {% if not user.is_authenticated %}
             <li><a href="{% url 'web-login' %}">Login</a></li>
             {% else %}
