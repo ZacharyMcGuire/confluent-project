@@ -147,3 +147,6 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+LOGIN_URL = 'web-login'
+LOGOUT_REDIRECT_URL = 'web-login'
