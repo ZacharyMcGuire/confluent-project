@@ -1,6 +1,5 @@
-<h1>Pages</h1>
-<ul>
-    {% for page in pages %}
-    <li><a href="/pages/{{ page.id }}/">{{ page.title }}</a></li>
-    {% endfor %}
-</ul>
+{% block sidebar %}
+{% for page in pages %}
+<li><a href="{% url 'web-page-detail' page.id %}">{{ page.title }}</a></li>
+{% endfor %}
+{% endblock %}

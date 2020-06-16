@@ -32,7 +32,7 @@ class PageViewSet(viewsets.ModelViewSet):
     """
     queryset = Page.objects.all()
     serializer_class = PageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = [permissions.IsAuthenticated,
                           IsOwnerOrReadOnly]
 
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
