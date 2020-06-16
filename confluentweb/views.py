@@ -1,6 +1,4 @@
-from django.http import HttpResponse
-from django.template import loader
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -10,23 +8,25 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from confluentapi.models import Page
 
 
+def index(request):
+    return render(request, template_name='index.html')
+
+
 class Login(APIView):
     # permission_classes = (AllowAny,)
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'login.html'
 
     def get(self, request):
-        template = loader.get_template(self.template_name)
-        return HttpResponse(template.render())
+        return render(request, template_name=self.template_name)
 
     def post(self, request):
-        template = loader.get_template(self.template_name)
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('web-page-list')
+            return redirect('web-index')
         else:
             return redirect('web-login')
 
